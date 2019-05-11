@@ -21,20 +21,21 @@ let repoSchema = mongoose.Schema({
 // makes a model/collection of schema
 let Repo = mongoose.model('Repo', repoSchema);
 
-// consider taking array of repos
+
+// save a repo or repos to the MongoDB
+// needs to prevent saving duplicates
 let save = (repoData, callback) => {
-  // prevent saving duplicates
-  db.collection.createIndex({ "id": 1, 'owner': 1, 'description': 1, 'stargazers_count': 1 }, { unique: true })
-  // This function should save a repo or repos to the MongoDB
+  var parsedRepoData = JSON.parse(repoData);
+  console.log(parsedRepoData);
+  // var userID = JSON.parse(repoData).id
+
   Repo.create(repoData, function (err, result) {
     if (err) {
       return callback(err);
     }
     callback(result);
-});
+  });
+}
+
 
 module.exports.save = save;
-
-
-
-// mongoose specifies type of data entering mongo db

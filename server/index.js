@@ -1,28 +1,41 @@
-const express = require('express');
-var bodyParser = require('body-parser')
-
+let express = require('express');
+let bodyParser = require('body-parser')
 let app = express();
+let saveFile = require('../database/index.js');
+// gives access to modules.exports object in github.js
+let githubHelperFile = require('../helpers/github.js');
 
-var jsonParser = bodyParser.json()
-var urlencodedParser = bodyParser.urlencoded()
+let jsonParser = bodyParser.json()
+let urlencodedParser = bodyParser.urlencoded()
 
-app.use(express.static(__dirname + '/../client/dist'));
-
+// specify middleware as the callback/handler function
 // creates 'body' key in the incoming message equal to an object with all your data inside
 app.use(bodyParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
+app.use(express.static(__dirname + '/../client/dist'));
 
+
+// take github username and get repo info from github API, then save repo info in db
 app.post('/repos', jsonParser, function (req, res) {
-  console.log(req.body);
-  // res.send(req.body.data)
-  // take github username and get repo info from github API, then save repo info in db
-  // getReposByUsername(username, callback)
-  // save(repoData, callback)
+  console.log('username: ', req.body.term);
+  githubHelperFile.getReposByUsername(req.body.term, (err, data) => {
+    if (err) {
+      console.log('Could not find user in database');
+      return;
+    }
+    saveFile.save(data, (err, data) => {
+      if(err) {
+        console.log('Unable to save repos to database')
+      }
+      res.status(201).send()
+    })
+  });
 });
 
+
+// This route should send back the top 25 repos
 app.get('/repos', function (req, res) {
-  // This route should send back the top 25 repos
 });
 
 let port = 1128;

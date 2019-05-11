@@ -1,6 +1,7 @@
 const request = require('request');
 const config = require('../config.js');
 
+// does this work as intended?
 let getReposByUsername = (username, callback) => {
   // Use the request module to request repos for a user from github API
   let options = {
