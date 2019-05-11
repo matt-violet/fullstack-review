@@ -23,7 +23,8 @@ let Repo = mongoose.model('Repo', repoSchema);
 
 // consider taking array of repos
 let save = (repoData, callback) => {
-  // write data into a collection/model
+  // prevent saving duplicates
+  db.collection.createIndex({ "id": 1, 'owner': 1, 'description': 1, 'stargazers_count': 1 }, { unique: true })
   // This function should save a repo or repos to the MongoDB
   Repo.create(repoData, function (err, result) {
     if (err) {

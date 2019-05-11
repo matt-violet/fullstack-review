@@ -1,5 +1,6 @@
 import React from 'react';
 
+// props = onSearch(term)
 class Search extends React.Component {
   constructor(props) {
     super(props);

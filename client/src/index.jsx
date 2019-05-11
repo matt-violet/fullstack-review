@@ -10,7 +10,6 @@ class App extends React.Component {
     this.state = { 
       repos: []
     }
-
   }
 
   search (term) {
@@ -19,7 +18,7 @@ class App extends React.Component {
     $.ajax({
       type: "POST",
       url: '/repos',
-      data: term,
+      data: {'term': term},
       success: function(){
           console.log('POST successful')
         },
